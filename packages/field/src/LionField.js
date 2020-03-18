@@ -1,10 +1,10 @@
-import { SlotMixin, LitElement } from '@lion/core';
+import { LitElement, SlotMixin } from '@lion/core';
 import { DisabledMixin } from '@lion/core/src/DisabledMixin.js';
 import { ValidateMixin } from '@lion/validate';
+import { FocusMixin } from './FocusMixin.js';
+import { FormatMixin } from './FormatMixin.js';
 import { FormControlMixin } from './FormControlMixin.js';
 import { InteractionStateMixin } from './InteractionStateMixin.js'; // applies FocusMixin
-import { FormatMixin } from './FormatMixin.js';
-import { FocusMixin } from './FocusMixin.js';
 
 /* eslint-disable wc/guard-super-call */
 
@@ -80,7 +80,6 @@ export class LionField extends FormControlMixin(
     if (this._inputNode) {
       this._setValueAndPreserveCaret(value);
     }
-    this._onValueChanged({ value });
   }
 
   get value() {
@@ -178,14 +177,12 @@ export class LionField extends FormControlMixin(
     );
   }
 
-  _onValueChanged({ value }) {
-    if (super._onValueChanged) {
-      super._onValueChanged();
+  _onModelValueChanged({ modelValue }) {
+    if (super._onModelValueChanged) {
+      super._onModelValueChanged();
     }
     // For styling purposes, make it known the input field is not empty
-    if (this._inputNode) {
-      this[value ? 'setAttribute' : 'removeAttribute']('filled', '');
-    }
+    this[modelValue !== '' ? 'setAttribute' : 'removeAttribute']('filled', '');
   }
 
   /**
